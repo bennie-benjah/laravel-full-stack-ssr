@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -43,7 +42,25 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
+    /**
+     * Get all of the comments for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    // public function comments()
+    // {
+    //     return $this->hasMany(Comment::class);
+    // }
+    public function features()
+    {
+        return $this->hasMany(Feature::class);
+    }
+
+    // public function upvotes()
+    // {
+    //     return $this->hasMany(Upvote::class);
+    // }
 }
