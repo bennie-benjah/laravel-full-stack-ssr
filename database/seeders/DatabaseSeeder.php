@@ -7,6 +7,7 @@ use App\Enum\PermissionsEnum;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\Feature;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -48,5 +49,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'commenter@example.com',
             'password' => bcrypt('password'),
         ])->assignRole(RolesEnum::Commenter);
+        Feature::factory(100)->create([
+            'name' => 'Feature 1',
+            'description' => 'Description for feature 1',
+            'user_id' => User::where('email', 'admin@example.com')->first()->id,
+        ]);
     }
 }

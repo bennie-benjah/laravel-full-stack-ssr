@@ -38,5 +38,45 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    roles: string[];
     [key: string]: unknown; // This allows for additional properties...
+}
+export type PaginatedData = {
+    data: T[];
+    links: Record<string, string | null>;
+}
+export interface Feature {
+    id: number;
+    name: string;
+    description: string;
+    icon?: string; // Optional icon name
+}
+
+// Define the pagination response structure
+export interface PaginatedResponse<T> {
+    data: T[];
+    links: {
+        first: string | null;
+        last: string | null;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        from: number;
+        last_page: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+        path: string;
+        per_page: number;
+        to: number;
+        total: number;
+    };
+}
+
+export interface IndexProps {
+    features: PaginatedResponse<Feature>;
 }
