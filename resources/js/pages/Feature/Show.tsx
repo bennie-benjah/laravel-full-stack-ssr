@@ -6,6 +6,14 @@ import { useEffect, useState } from 'react';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreVertical } from "lucide-react";
+
+import {
     Dialog,
     DialogContent,
     DialogDescription,
@@ -114,28 +122,34 @@ export default function Show({ feature }: ShowProps) {
                         </h1>
                     </div>
 
-                    <div className="flex space-x-4">
-                        <Link
-                            href={`/features/${featureData.id}/edit`}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                            Edit Feature
-                        </Link>
-                        <Button
-                            variant="destructive"
-                            className="px-4 py-2"
-                            onClick={() => setShowDeleteDialog(true)}
-                            disabled={processing}
-                        >
-                            Delete Feature
-                        </Button>
-                        <Link
-                            href="/features"
-                            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                        >
-                            Back to Features
-                        </Link>
-                    </div>
+                    <div>
+    <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+                <MoreVertical className="h-5 w-5" />
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+                <Link href={`/features/${featureData.id}/edit`}>
+                    Edit Feature
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+                onClick={() => setShowDeleteDialog(true)}
+                disabled={processing}
+            >
+                Delete Feature
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+                <Link href="/features">
+                    Back to Features
+                </Link>
+            </DropdownMenuItem>
+        </DropdownMenuContent>
+    </DropdownMenu>
+</div>
+
                 </div>
 
                 {/* Feature Content */}

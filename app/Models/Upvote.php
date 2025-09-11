@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Upvote extends Model
 {
+    public $timestamps = false;
     protected $fillable = ['user_id', 'feature_id', 'is_upvote'];
 
     public function user()

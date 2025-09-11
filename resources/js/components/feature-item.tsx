@@ -8,24 +8,37 @@ export default function FeatureItem({ feature }: { feature: Feature }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const toggleReadMore = () => setIsExpanded(!isExpanded);
     const upvoteForm = useForm({
-        upvote: true,
+        is_upvote: true,
         feature_id: feature.id,
     });
-    // Removed unused downvoteForm
-    const UpvoteDownvote = (upvote: boolean) => {
-        if(feature.user_upvoted && upvote || !feature.user_downvoted && !upvote) {
+    const downvoteForm = useForm({
+        is_upvote: false,
+        feature_id: feature.id,
+    });
+    const UpvoteDownvote = (is_upvote: boolean) => {
+        if ((feature.user_upvoted && is_upvote) || (feature.user_downvoted && !is_upvote)) {
             upvoteForm.delete(route('upvote.destroy', feature.id), {
-                onSuccess: () => {
-                    // Optionally handle success (e.g., show a message)
-        }
+                preserveScroll: true,
+
             });
             return;
+
+        }else{
+            let form = null;
+            if (is_upvote) {
+                form = upvoteForm;
+            } else {
+                form = downvoteForm;
+            }
+            form.setData({
+                is_upvote: is_upvote,
+                feature_id: feature.id,
+
+            });
+            form.post(route('features.upvote', feature.id), {
+                preserveScroll: true,
+            });
         }
-        upvoteForm.post(route('features.upvote', feature.id), {
-            onSuccess: () => {
-                // Optionally handle success (e.g., show a message)
-            },
-        });
     };
     // Simple implementation assuming route names map to URLs like `/features/:id`
 
