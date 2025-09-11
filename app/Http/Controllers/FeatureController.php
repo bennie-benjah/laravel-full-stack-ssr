@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
+use App\Models\Upvote;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class FeatureController extends Controller
 {
@@ -14,7 +17,16 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        $paginated = Feature::latest()->paginate(12);
+        $paginated = Feature::latest()
+        ->withCount(['upvotes as upvote_count' => function ($query) {
+            $query->select(DB::raw('SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END)'));
+        }])
+        ->withExists(['upvotes as user_upvoted' => function ($query) {
+            $query->where('user_id', Auth::id())->where('is_upvote', true);
+        }, 'upvotes as user_downvoted' => function ($query) {
+            $query->where('user_id', Auth::id())->where('is_upvote', false);
+        }])
+        ->paginate(12);
         return Inertia::render('Feature/Index', [
             'features' => FeatureResource::collection($paginated),
         ]);
@@ -25,7 +37,7 @@ class FeatureController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Feature/Create');
     }
 
     /**
@@ -33,7 +45,16 @@ class FeatureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+
+        ]);
+        $data['user_id'] = $request->user()->id;
+
+        Feature::create($data);
+
+        return redirect()->route('features.index')->with('success', 'Feature created successfully.');
     }
 
     /**
@@ -41,7 +62,12 @@ class FeatureController extends Controller
      */
     public function show(Feature $feature)
     {
-        //
+        $feature->upvote_count = Upvote::where('feature_id', $feature->id)
+            ->select(DB::raw('SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END)'))
+            ->value(DB::raw('COALESCE(SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END), 0)'));
+        return Inertia::render('Feature/Show', [
+            'feature' => new FeatureResource($feature),
+        ]);
     }
 
     /**
@@ -49,7 +75,9 @@ class FeatureController extends Controller
      */
     public function edit(Feature $feature)
     {
-        //
+        return Inertia::render('Feature/Edit', [
+            'feature' => new FeatureResource($feature),
+        ]);
     }
 
     /**
@@ -57,14 +85,24 @@ class FeatureController extends Controller
      */
     public function update(Request $request, Feature $feature)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+        $feature->update($data);
+        return redirect()->route('features.index')->with('success', 'Feature updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Feature $feature)
-    {
-        //
-    }
+   // In your FeatureController destroy method
+public function destroy(Feature $feature)
+{
+    $feature->delete();
+
+    return redirect()->route('features.index')
+        ->with('message', 'Feature deleted successfully!')
+        ->with('messageType', 'delete'); // Add a custom flag for deletion
+}
 }

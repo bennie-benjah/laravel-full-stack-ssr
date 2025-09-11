@@ -41,6 +41,7 @@
 
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
+        @routes {{-- 👈 THIS makes Ziggy's routes available in JS --}}
         @inertiaHead
     </head>
     <body class="font-sans antialiased">

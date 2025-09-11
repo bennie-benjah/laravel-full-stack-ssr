@@ -12,6 +12,7 @@ class FeatureResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    
     public function toArray(Request $request): array
     {
         return [
@@ -20,7 +21,10 @@ class FeatureResource extends JsonResource
             'description' => $this->description,
             'user' => new UserResource($this->user),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            
+            'upvote_count' => $this->upvote_count ?: 0,
+            'user_upvoted' => (boolean)$this->user_upvoted,
+
+            'user_downvoted' => (boolean)$this->user_downvoted,
         ];
     }
 }

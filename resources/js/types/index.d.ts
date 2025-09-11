@@ -45,11 +45,26 @@ export type PaginatedData = {
     data: T[];
     links: Record<string, string | null>;
 }
+// In your types file
+// In your types file
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
 export interface Feature {
     id: number;
     name: string;
     description: string;
-    icon?: string; // Optional icon name
+    icon?: string;
+    created_at: string;
+    updated_at?: string;
+    user?: User; // Add user property
+    upvote_count: number; // Add upvote_count property
+    user_upvoted?: boolean; // Add user_upvoted property
+    user_downvoted?: boolean; // Add user_downvoted property
+    
 }
 
 // Define the pagination response structure
