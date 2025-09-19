@@ -45,20 +45,22 @@ export interface User {
 export type PaginatedData = {
     data: T[];
     links: Record<string, string | null>;
-}
+};
 // In your types file
 // In your types file
 export interface User {
     id: number;
     name: string;
     email: string;
+    permissions: string[];
+    roles: string[];
 }
 export type Comment = {
     id: number;
     comment: string;
     user: User;
     created_at: string;
-}
+};
 export type Feature = {
     id: number;
     name: string;
@@ -71,8 +73,7 @@ export type Feature = {
     user_upvoted?: boolean; // Add user_upvoted property
     user_downvoted?: boolean; // Add user_downvoted property
     comments?: Comment[]; // Add comments property
-
-}
+};
 
 // Define the pagination response structure
 export interface PaginatedResponse<T> {

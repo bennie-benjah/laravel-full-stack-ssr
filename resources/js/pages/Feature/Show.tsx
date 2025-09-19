@@ -11,6 +11,7 @@ import NewCommentForm from '@/components/NewCommentForm';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { usePage } from '@inertiajs/react';
 import CommentItem from '../../components/CommentItem';
+import { can } from '@/helpers';
 interface ShowProps {
     feature: {
         data: Feature;
@@ -31,6 +32,7 @@ const breadcrumbs = (feature?: Feature): BreadcrumbItem[] => [
 export default function Show({ feature }: ShowProps) {
     const featureData = feature?.data;
     const { auth } = usePage().props as { auth: { user: { id: number } } };
+    const user = usePage().props.auth.user;
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const { delete: destroy, processing } = useForm();
@@ -101,12 +103,16 @@ export default function Show({ feature }: ShowProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                                <Link href={`/features/${featureData.id}/edit`}>Edit Feature</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} disabled={processing}>
-                                Delete Feature
-                            </DropdownMenuItem>
+                            {can(user, 'manage_features') && (
+                                <DropdownMenuItem asChild>
+                                    <Link href={`/features/${featureData.id}/edit`}>Edit Feature</Link>
+                                </DropdownMenuItem>
+                            )}
+                            {can(user, 'manage_features') && (
+                                <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} disabled={processing}>
+                                    Delete Feature
+                                </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem asChild>
                                 <Link href="/features">Back to Features</Link>
                             </DropdownMenuItem>
