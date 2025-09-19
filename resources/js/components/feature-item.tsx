@@ -105,7 +105,15 @@ export default function FeatureItem({ feature }: { feature: Feature }) {
                 <p className="mb-2 text-gray-600 dark:text-gray-400">
                     {isExpanded ? feature.description : `${feature.description.substring(0, 100)}...`}
                 </p>
+<div className="mt-6 py-4">
+   <Link
+    href={route('features.show', feature.id)}
+    className="inline-block px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
+>
+    Comments
+</Link>
 
+</div>
                 <div className="mt-4 flex items-center justify-between">
                     <button
                         onClick={toggleReadMore}

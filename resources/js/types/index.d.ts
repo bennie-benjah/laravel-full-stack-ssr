@@ -1,5 +1,6 @@
 import { InertiaLinkProps } from '@inertiajs/react';
 import { LucideIcon } from 'lucide-react';
+// import comments from '../routes/features/comments/index';
 
 export interface Auth {
     user: User;
@@ -52,8 +53,13 @@ export interface User {
     name: string;
     email: string;
 }
-
-export interface Feature {
+export type Comment = {
+    id: number;
+    comment: string;
+    user: User;
+    created_at: string;
+}
+export type Feature = {
     id: number;
     name: string;
     description: string;
@@ -64,7 +70,8 @@ export interface Feature {
     upvote_count: number; // Add upvote_count property
     user_upvoted?: boolean; // Add user_upvoted property
     user_downvoted?: boolean; // Add user_downvoted property
-    
+    comments?: Comment[]; // Add comments property
+
 }
 
 // Define the pagination response structure

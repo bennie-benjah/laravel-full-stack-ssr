@@ -2,13 +2,12 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Star } from 'lucide-react';
 import AppLogo from './app-logo';
-import {route} from 'ziggy-js';
+import { route } from 'ziggy-js';
 
 const mainNavItems: NavItem[] = [
     {
@@ -16,13 +15,11 @@ const mainNavItems: NavItem[] = [
         href: route('dashboard'),
         icon: LayoutGrid,
     },
-    ...(typeof route('features.index') !== 'undefined' ? [
-        {
-            title: 'Features',
-            href: route('features.index'),
-            icon: Star,
-        }
-    ] : []),
+    {
+        title: 'Features',
+        href: route('features.index'),
+        icon: Star,
+    },
 ];
 
 
@@ -46,7 +43,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={route('dashboard')} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

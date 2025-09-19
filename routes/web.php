@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\UpvoteController;
+use App\Http\Controllers\CommentController;
 use App\Models\Feature;
 use App\Models\User;
 use App\Models\Upvote;
@@ -13,6 +14,9 @@ Route::redirect('/', '/dashboard');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('features/{feature}/comments', [CommentController::class, 'store'])->name('features.comments.store');
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
     Route::get('dashboard', function () {
     return Inertia::render('dashboard', [
         'stats' => [

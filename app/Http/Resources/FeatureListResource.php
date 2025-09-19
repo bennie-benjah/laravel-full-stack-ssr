@@ -5,14 +5,14 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FeatureResource extends JsonResource
+class FeatureListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    
+
     public function toArray(Request $request): array
     {
         return [
@@ -25,14 +25,7 @@ class FeatureResource extends JsonResource
             'user_upvoted' => (boolean)$this->user_upvoted,
 
             'user_downvoted' => (boolean)$this->user_downvoted,
-            'comments' => $this->comments->map(function ($comment) {
-                return [
-                    'id' => $comment->id,
-                    'comment' => $comment->comment,
-                    'user' => new UserResource($comment->user),
-                    'created_at' => $comment->created_at->format('Y-m-d H:i:s'),
-                ];
-            }),
+
         ];
     }
 }

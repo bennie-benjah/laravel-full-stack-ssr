@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\FeatureResource;
+use App\Http\Resources\FeatureListResource;
 use App\Models\Feature;
 use App\Models\Upvote;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class FeatureController extends Controller
     public function index()
     {
         $paginated = Feature::latest()
+
         ->withCount(['upvotes as upvote_count' => function ($query) {
             $query->select(DB::raw('SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END)'));
         }])
@@ -28,7 +30,7 @@ class FeatureController extends Controller
         }])
         ->paginate(12);
         return Inertia::render('Feature/Index', [
-            'features' => FeatureResource::collection($paginated),
+            'features' => FeatureListResource::collection($paginated),
         ]);
     }
 
@@ -60,15 +62,23 @@ class FeatureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Feature $feature)
-    {
-        $feature->upvote_count = Upvote::where('feature_id', $feature->id)
-            ->select(DB::raw('SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END)'))
-            ->value(DB::raw('COALESCE(SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END), 0)'));
-        return Inertia::render('Feature/Show', [
-            'feature' => new FeatureResource($feature),
-        ]);
-    }
+   public function show(Feature $feature)
+{
+    $feature->load([
+        'comments.user', // load comments and their authors
+        'user',          // load feature creator
+    ]);
+
+    $feature->upvote_count = Upvote::where('feature_id', $feature->id)
+        ->select(DB::raw('SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END)'))
+        ->value(DB::raw('COALESCE(SUM(CASE WHEN is_upvote = 1 THEN 1 ELSE -1 END), 0)'));
+
+    return Inertia::render('Feature/Show', [
+        'feature' => new FeatureResource($feature),
+    ]);
+}
+
+
 
     /**
      * Show the form for editing the specified resource.
