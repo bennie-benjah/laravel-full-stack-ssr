@@ -13,7 +13,7 @@ Route::redirect('/', '/dashboard');
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['verified', 'role:'.\App\Enum\RolesEnum::User->value])->group(function () {
     Route::post('features/{feature}/comments', [CommentController::class, 'store'])->middleware('can:'.\App\Enum\PermissionsEnum::ManageComments->value )->name('features.comments.store');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('can:'.\App\Enum\PermissionsEnum::ManageComments->value)->name('comments.destroy');
 
@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('features/{feature}', [FeatureController::class, 'update'])->middleware('can:'.\App\Enum\PermissionsEnum::ManageFeatures->value)->name('features.update');
     Route::delete('features/{feature}', [FeatureController::class, 'destroy'])->middleware('can:'.\App\Enum\PermissionsEnum::ManageFeatures->value)->name('features.destroy');
     Route::post('features/{feature}/upvote', [UpvoteController::class, 'store'])->name('features.upvote');
-    Route::delete('features/{feature}/upvote', [UpvoteController::class, 'destroy'])->middleware('can:'.\App\Enum\PermissionsEnum::ManageFeatures->value)->name('upvote.destroy');
+    Route::delete('features/{feature}/upvote', [UpvoteController::class, 'destroy'])->middleware('can:')->name('upvote.destroy');
 
 });
 
