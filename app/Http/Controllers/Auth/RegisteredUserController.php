@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        // $user->assignRole(RolesEnum::User->value); // Assign the "User" role by default
+        $user->assignRole(RolesEnum::User->value); // Assign the "User" role by default
         event(new Registered($user));
 
         Auth::login($user);

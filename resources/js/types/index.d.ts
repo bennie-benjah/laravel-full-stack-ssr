@@ -39,6 +39,7 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    permissions: string[];
     roles: string[];
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -48,13 +49,7 @@ export type PaginatedData = {
 };
 // In your types file
 // In your types file
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    permissions: string[];
-    roles: string[];
-}
+
 export type Comment = {
     id: number;
     comment: string;
